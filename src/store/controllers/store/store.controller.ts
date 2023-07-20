@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Post,Get, Param, ParseIntPipe, Put, Delete } from '@nestjs/common';
+import { Body, Controller, Post,Get, Param, ParseIntPipe, Put, Delete, NotFoundException } from '@nestjs/common';
 import { UpdateStoreDto } from 'src/store/dtos/UpdateStoreDto.dto';
 import { CreateStoreDto } from 'src/store/dtos/createStoreDto.dto';
 import { StoreService } from 'src/store/services/store/store.service';
@@ -13,29 +13,36 @@ export class StoreController {
         this.storeService.AddStore(createNewStore)
     }
     @Get()
-    getStores(){
-   return this.storeService.FindStores()
+   async getStores(){
+        const stores= await this.storeService.FindStores()
+        if(stores) return stores 
+        return  {message: 'No Store Found'};
     }
     @Get('/:id')
     async getStore(@Param('id', ParseIntPipe) id: number){
         const store=  await this.storeService.FindStore(id)
-   return store
+        if(store!=null)  return store
+        else return new NotFoundException('Store not found.');
     }
     @Put('/:id')
     async modifierStore(@Param('id', ParseIntPipe) id: number,@Body() updateStore:UpdateStoreDto ){
         try {
-            await this.storeService.UpdateStore(id,updateStore)
-            return { message: 'Store modifier successfully.' };
+           const store= await this.storeService.UpdateStore(id,updateStore)
+           console.log(store);
+           
+           if(store!=null) return { message: 'Store modifier successfully.' };
+          return new NotFoundException('Store not found.');
                } catch (error) {
                console.error('Error occurred while updating store:', error);
-               return { error: 'An error occurred while deleting the store.'};
+               return { error: 'An error occurred while updating the store.'};
           }
          }
     @Delete('/:id')
     async deleteStore(@Param('id', ParseIntPipe) id: number){
          try {
-      await this.storeService.DeleteStore(id);
-      return { message: 'Store deleted successfully.' };
+        const store= await this.storeService.DeleteStore(id);
+        if(store) return { message: 'Store deleted successfully.' };
+        else return new NotFoundException('Store not found.');
          } catch (error) {
          console.error('Error occurred while deleting store:', error);
          return { error: 'An error occurred while deleting the store.'};

@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 export class CreateStoreDto { 
   @IsNotEmpty()  
+  @IsString()
   StoreName: string;
   @IsNotEmpty()    
+  @IsString()
   country: string;
 } 
