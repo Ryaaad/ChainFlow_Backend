@@ -4,6 +4,8 @@ import { Module } from "@nestjs/common";
 import { StoreModule } from './store/store.module';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Store } from "entity/Store";
+import { User } from "entity/User";
+import { UserModule } from './user/user.module';
 
 
 @Module({
@@ -15,10 +17,11 @@ import { Store } from "entity/Store";
       username: 'postgres',
       password: 'yayakong',
       database: 'ChainFlow',
-      entities: [Store],
+      entities: [Store,User],
       synchronize: true,
     }),
     StoreModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

@@ -6,14 +6,22 @@ import {
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
+    PrimaryColumn,
+    Unique
   } from 'typeorm';
   
-  @Entity({ name: 'stores' })
-  export class Store {
+  @Entity({ name: 'users' })
+  export class User {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
+    @Column(Unique)
+    email: string;
     @Column()
-    StoreName: string;
+    FirstName: string;
     @Column()
-    country: string;
+    Role: string;
+    @Column()
+    LastName: string;
+    @Column()
+    HashedP: string;
   }
